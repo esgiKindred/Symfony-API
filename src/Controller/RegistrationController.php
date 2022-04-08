@@ -19,10 +19,10 @@ class RegistrationController extends AbstractController
 
         switch ($usertype){
             case 'parent' :
-                $user->setRoles(['parent']);
+                $user->setRoles(['ROLE_PARENT']);
                 break;
             case 'child' :
-                $user->setRoles(['child']);
+                $user->setRoles(['ROLE_CHILD']);
                 break;
         }
 
