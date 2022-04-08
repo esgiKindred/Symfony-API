@@ -8,3 +8,7 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+
+###> lexik/jwt-authentication-bundle ###
+#/config/jwt/*.pem  pas bon pour de la prdd
+###< lexik/jwt-authentication-bundle ###
