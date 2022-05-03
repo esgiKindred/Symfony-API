@@ -17,68 +17,23 @@ class Contrat
     #[ORM\Column(type: 'integer')]
     private $id;
 
-
-    #[ORM\Column(type: 'boolean')]
-    private $signature;
-
-    #[ORM\OneToMany(mappedBy: 'contrat', targetEntity: Categorie::class)]
-    private $categories;
-
     #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'contrats')]
     private $users;
 
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $signatureParent;
+
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private $signatureEnfant;
 
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
         $this->users = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getSignature(): ?bool
-    {
-        return $this->signature;
-    }
-
-    public function setSignature(bool $signature): self
-    {
-        $this->signature = $signature;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Categorie[]
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(Categorie $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-            $category->setContrat($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Categorie $category): self
-    {
-        if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
-            if ($category->getContrat() === $this) {
-                $category->setContrat(null);
-            }
-        }
-
-        return $this;
     }
 
     /**
@@ -104,6 +59,30 @@ class Contrat
         if ($this->users->removeElement($user)) {
             $user->removeContrat($this);
         }
+
+        return $this;
+    }
+
+    public function getSignatureParent(): ?bool
+    {
+        return $this->signatureParent;
+    }
+
+    public function setSignatureParent(?bool $signatureParent): self
+    {
+        $this->signatureParent = $signatureParent;
+
+        return $this;
+    }
+
+    public function getSignatureEnfant(): ?bool
+    {
+        return $this->signatureEnfant;
+    }
+
+    public function setSignatureEnfant(?bool $signatureEnfant): self
+    {
+        $this->signatureEnfant = $signatureEnfant;
 
         return $this;
     }

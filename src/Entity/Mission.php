@@ -30,6 +30,9 @@ class Mission
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'missions')]
     private $categorie;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $autoEvaluation;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +94,18 @@ class Mission
     public function setCategorie(?Categorie $categorie): self
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getAutoEvaluation(): ?string
+    {
+        return $this->autoEvaluation;
+    }
+
+    public function setAutoEvaluation(?string $autoEvaluation): self
+    {
+        $this->autoEvaluation = $autoEvaluation;
 
         return $this;
     }

@@ -50,13 +50,13 @@ class AppFixtures extends Fixture
         }
 
         $contrat = new Contrat();
-        $contrat->setSignature(true);
+        $contrat->setSignatureParent(true);
+        $contrat->setSignatureEnfant(true);
         $manager->persist($contrat);
 
         $categorie = new Categorie();
         $categorie->setNom('CategorieTest');
         $categorie->setCouleur('#FF5733');
-        $categorie->setContrat($contrat);
         $manager->persist($categorie);
 
         for ($i=0; $i < 10; $i++) {

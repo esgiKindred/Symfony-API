@@ -43,10 +43,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
     private $enfants;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $kins = 0;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $pointsBonus = 0;
+
+    #[ORM\ManyToMany(targetEntity: Recompense::class, mappedBy: 'users')]
+    private $recompenses;
+
     public function __construct()
     {
         $this->contrats = new ArrayCollection();
         $this->enfants = new ArrayCollection();
+        $this->recompenses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -212,6 +222,57 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($enfant->getParent() === $this) {
                 $enfant->setParent(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getKins(): ?int
+    {
+        return $this->kins;
+    }
+
+    public function setKins(?int $kins): self
+    {
+        $this->kins = $kins;
+
+        return $this;
+    }
+
+    public function getPointsBonus(): ?int
+    {
+        return $this->pointsBonus;
+    }
+
+    public function setPointsBonus(?int $pointsBonus): self
+    {
+        $this->pointsBonus = $pointsBonus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recompense>
+     */
+    public function getRecompenses(): Collection
+    {
+        return $this->recompenses;
+    }
+
+    public function addRecompense(Recompense $recompense): self
+    {
+        if (!$this->recompenses->contains($recompense)) {
+            $this->recompenses[] = $recompense;
+            $recompense->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecompense(Recompense $recompense): self
+    {
+        if ($this->recompenses->removeElement($recompense)) {
+            $recompense->removeUser($this);
         }
 
         return $this;
