@@ -52,11 +52,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Recompense::class, mappedBy: 'users')]
     private $recompenses;
 
+    #[ORM\ManyToMany(targetEntity: Mission::class, mappedBy: 'user')]
+    private $missions;
+
     public function __construct()
     {
         $this->contrats = new ArrayCollection();
         $this->enfants = new ArrayCollection();
         $this->recompenses = new ArrayCollection();
+        $this->missions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -273,6 +277,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->recompenses->removeElement($recompense)) {
             $recompense->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Mission>
+     */
+    public function getMissions(): Collection
+    {
+        return $this->missions;
+    }
+
+    public function addMission(Mission $mission): self
+    {
+        if (!$this->missions->contains($mission)) {
+            $this->missions[] = $mission;
+            $mission->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMission(Mission $mission): self
+    {
+        if ($this->missions->removeElement($mission)) {
+            $mission->removeUser($this);
         }
 
         return $this;
