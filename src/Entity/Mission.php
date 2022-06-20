@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MissionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MissionRepository::class)]
@@ -29,6 +31,17 @@ class Mission
 
     #[ORM\ManyToOne(targetEntity: Categorie::class, inversedBy: 'missions')]
     private $categorie;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $autoEvaluation;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'missions')]
+    private $user;
+
+    public function __construct()
+    {
+        $this->user = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,6 +104,42 @@ class Mission
     public function setCategorie(?Categorie $categorie): self
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getAutoEvaluation(): ?string
+    {
+        return $this->autoEvaluation;
+    }
+
+    public function setAutoEvaluation(?string $autoEvaluation): self
+    {
+        $this->autoEvaluation = $autoEvaluation;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        $this->user->removeElement($user);
 
         return $this;
     }

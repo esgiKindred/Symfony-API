@@ -23,9 +23,6 @@ class Categorie
     #[ORM\Column(type: 'string', length: 255)]
     private $couleur;
 
-    #[ORM\ManyToOne(targetEntity: Contrat::class, inversedBy: 'categories')]
-    private $contrat;
-
     #[ORM\OneToMany(mappedBy: 'categorie', targetEntity: Mission::class)]
     private $missions;
 
@@ -59,18 +56,6 @@ class Categorie
     public function setCouleur(string $couleur): self
     {
         $this->couleur = $couleur;
-
-        return $this;
-    }
-
-    public function getContrat(): ?Contrat
-    {
-        return $this->contrat;
-    }
-
-    public function setContrat(?Contrat $contrat): self
-    {
-        $this->contrat = $contrat;
 
         return $this;
     }

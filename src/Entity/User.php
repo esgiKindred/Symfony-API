@@ -37,11 +37,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Contrat::class, inversedBy: 'users')]
     private $contrats;
 
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'enfants')]
+    private $parent;
 
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    private $enfants;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $kins = 0;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $pointsBonus = 0;
+
+    #[ORM\ManyToMany(targetEntity: Recompense::class, mappedBy: 'users')]
+    private $recompenses;
+
+    #[ORM\ManyToMany(targetEntity: Mission::class, mappedBy: 'user')]
+    private $missions;
 
     public function __construct()
     {
         $this->contrats = new ArrayCollection();
+        $this->enfants = new ArrayCollection();
+        $this->recompenses = new ArrayCollection();
+        $this->missions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -166,6 +185,126 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeContrat(Contrat $contrat): self
     {
         $this->contrats->removeElement($contrat);
+
+        return $this;
+    }
+
+    public function getParent(): ?self
+    {
+        return $this->parent;
+    }
+
+    public function setParent(?self $parent): self
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, self>
+     */
+    public function getEnfants(): Collection
+    {
+        return $this->enfants;
+    }
+
+    public function addEnfant(self $enfant): self
+    {
+        if (!$this->enfants->contains($enfant)) {
+            $this->enfants[] = $enfant;
+            $enfant->setParent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEnfant(self $enfant): self
+    {
+        if ($this->enfants->removeElement($enfant)) {
+            // set the owning side to null (unless already changed)
+            if ($enfant->getParent() === $this) {
+                $enfant->setParent(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getKins(): ?int
+    {
+        return $this->kins;
+    }
+
+    public function setKins(?int $kins): self
+    {
+        $this->kins = $kins;
+
+        return $this;
+    }
+
+    public function getPointsBonus(): ?int
+    {
+        return $this->pointsBonus;
+    }
+
+    public function setPointsBonus(?int $pointsBonus): self
+    {
+        $this->pointsBonus = $pointsBonus;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Recompense>
+     */
+    public function getRecompenses(): Collection
+    {
+        return $this->recompenses;
+    }
+
+    public function addRecompense(Recompense $recompense): self
+    {
+        if (!$this->recompenses->contains($recompense)) {
+            $this->recompenses[] = $recompense;
+            $recompense->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRecompense(Recompense $recompense): self
+    {
+        if ($this->recompenses->removeElement($recompense)) {
+            $recompense->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Mission>
+     */
+    public function getMissions(): Collection
+    {
+        return $this->missions;
+    }
+
+    public function addMission(Mission $mission): self
+    {
+        if (!$this->missions->contains($mission)) {
+            $this->missions[] = $mission;
+            $mission->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMission(Mission $mission): self
+    {
+        if ($this->missions->removeElement($mission)) {
+            $mission->removeUser($this);
+        }
 
         return $this;
     }
