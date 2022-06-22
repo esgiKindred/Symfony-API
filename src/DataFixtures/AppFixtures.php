@@ -67,6 +67,7 @@ class AppFixtures extends Fixture
             $mission->setEvaluation('Evaluation: ' . $i);
             $mission->setCategorie($categorie);
             $manager->persist($mission);
+            $mission ->addUser($enfant);
         }
         $manager->flush();
     }
