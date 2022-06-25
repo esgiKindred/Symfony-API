@@ -44,6 +44,12 @@ class Mission
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'missions')]
     private $user;
 
+    #[ORM\Column(type: 'date', nullable: true)]
+    private $date;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $points;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -146,6 +152,30 @@ class Mission
     public function removeUser(User $user): self
     {
         $this->user->removeElement($user);
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(?\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getPoints(): ?int
+    {
+        return $this->points;
+    }
+
+    public function setPoints(?int $points): self
+    {
+        $this->points = $points;
 
         return $this;
     }
