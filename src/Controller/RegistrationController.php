@@ -30,6 +30,10 @@ class RegistrationController extends AbstractController
         $user->setLastName($request->get('lastname'));
         $user->setFirstName($request->get('firstname'));
 
+        $parent = $doctrine->getRepository(User::class)->findOneBy(['id' => $request->get('parent')]);
+
+        $user->setParent($parent);
+
         $plaintextPassword = $request->get('password');
 
         // hash the password (based on the security.yaml config for the $user class)

@@ -44,10 +44,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Contrat::class, inversedBy: 'users')]
     private $contrats;
 
-    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'enfants')]
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'enfants', cascade: ['persist'])]
     private $parent;
 
-    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class)]
+    #[ORM\OneToMany(mappedBy: 'parent', targetEntity: self::class, cascade: ['persist'])]
     private $enfants;
 
     #[ORM\Column(type: 'integer', nullable: true)]
