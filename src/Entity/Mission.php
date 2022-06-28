@@ -50,6 +50,9 @@ class Mission
     #[ORM\Column(type: 'integer', nullable: true)]
     private $points;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'missionsCreator')]
+    private $creator;
+
     public function __construct()
     {
         $this->user = new ArrayCollection();
@@ -176,6 +179,18 @@ class Mission
     public function setPoints(?int $points): self
     {
         $this->points = $points;
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?User $creator): self
+    {
+        $this->creator = $creator;
 
         return $this;
     }

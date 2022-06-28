@@ -17,8 +17,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource]
 #[ApiFilter(PropertyFilter::class)]
-#[ApiFilter(SearchFilter::class, properties: ['parent' => 'exact'])]
-#[ApiFilter(SearchFilter::class, properties: ['enfants' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['parent' => 'exact', 'enfants' => 'exact'])]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -63,12 +62,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Mission::class, mappedBy: 'user')]
     private $missions;
 
+    #[ORM\OneToMany(mappedBy: 'creator', targetEntity: Mission::class)]
+    private $missionsCreator;
+
     public function __construct()
     {
         $this->contrats = new ArrayCollection();
         $this->enfants = new ArrayCollection();
         $this->recompenses = new ArrayCollection();
         $this->missions = new ArrayCollection();
+        $this->missionsCreator = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -312,6 +315,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->missions->removeElement($mission)) {
             $mission->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Mission>
+     */
+    public function getMissionsCreator(): Collection
+    {
+        return $this->missionsCreator;
+    }
+
+    public function addMissionsCreator(Mission $missionsCreator): self
+    {
+        if (!$this->missionsCreator->contains($missionsCreator)) {
+            $this->missionsCreator[] = $missionsCreator;
+            $missionsCreator->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMissionsCreator(Mission $missionsCreator): self
+    {
+        if ($this->missionsCreator->removeElement($missionsCreator)) {
+            // set the owning side to null (unless already changed)
+            if ($missionsCreator->getCreator() === $this) {
+                $missionsCreator->setCreator(null);
+            }
         }
 
         return $this;
