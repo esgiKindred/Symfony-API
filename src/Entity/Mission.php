@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MissionRepository::class)]
 #[ApiResource]
-#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['user' => 'exact', 'creator' => 'exact'])]
 class Mission
 {
     #[ORM\Id]
