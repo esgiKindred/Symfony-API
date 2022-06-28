@@ -18,6 +18,7 @@ use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
 #[ApiResource]
 #[ApiFilter(PropertyFilter::class)]
 #[ApiFilter(SearchFilter::class, properties: ['parent' => 'exact'])]
+#[ApiFilter(SearchFilter::class, properties: ['enfants' => 'exact'])]
 
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
