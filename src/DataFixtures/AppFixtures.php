@@ -38,6 +38,14 @@ class AppFixtures extends Fixture
         $enfant->setRoles(['enfant']);
         $manager->persist($enfant);
 
+        $contrat = new Contrat();
+        $contrat->setNom("contrattest");
+        $contrat->addUser($enfant);
+        $contrat->addUser($parent);
+        $contrat->setSignatureEnfant(false);
+        $contrat->setSignatureParent(false);
+        $manager->persist($contrat);
+
         for ($i=0; $i < 3; $i++) {
             $enfant = new User();
             $enfant->setFirstName('TestEnfant' . $i);
@@ -49,10 +57,7 @@ class AppFixtures extends Fixture
             $manager->persist($enfant);
         }
 
-        $contrat = new Contrat();
-        $contrat->setSignatureParent(true);
-        $contrat->setSignatureEnfant(true);
-        $manager->persist($contrat);
+
 
         $categorie = new Categorie();
         $categorie->setNom('CategorieTest');
